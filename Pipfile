@@ -6,8 +6,8 @@ name = "pip_conf_index_global"
 [packages]
 pyqt5 = "*"
 pyqt5-frameless-window = "*"
-pyqt-fluent-widgets = "*"
 requests = "*"
+pyqt-fluent-widgets = {git = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets.git"}
 
 [dev-packages]
 

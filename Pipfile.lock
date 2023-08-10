@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "56509831a1c50a7b0d75b95d238612dc3e506ae71ffb2bef1e77f74140ca760c"
+            "sha256": "84844841da95b2f7211e2edd3e08dc057a1b80045e4a7f3a0f560ac664ec3001"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -122,12 +122,12 @@
             "version": "==3.4"
         },
         "pyqt-fluent-widgets": {
+            "git": "https://githubfast.com/zhiyiYo/PyQt-Fluent-Widgets.git",
             "hashes": [
-                "sha256:86a96e02dddc69a1233612348232ba5d3d75108738c65f497bac434a1ed8e92e",
-                "sha256:c6d4b1939bbfafb3a41ea71f7d1fb138b2e62191fb15c95b58d6b3699043858e"
+                "sha256:431e9696ae9bb78a5271bde230f8d396d469a0937e7916e20b717858e3ccf419",
+                "sha256:872c6f5fb02915a3851e78b45257588e1dad1b2f172a615820140e2fe82655e1"
             ],
-            "index": "pip_conf_index_global",
-            "version": "==1.0.4"
+            "ref": "2d6f9dc1f75441fff404651e6ec367c239cfe850"
         },
         "pyqt5": {
             "hashes": [
