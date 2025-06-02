@@ -23,6 +23,15 @@ nativefier_command = ""
 JSON_VERSION = 0
 NPM_MIRROR = ""
 ENV=dict(os.environ)
+MODE = False
+
+
+startupinfo = None
+if sys.platform == 'win32':
+    startupinfo = subprocess.STARTUPINFO()
+    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    
+    
 class CMThread(QThread):
     sig = pyqtSignal(str)
     
@@ -46,7 +55,7 @@ class CMThread(QThread):
         fcm = cm_1.get_full_command()
         output=""
         #""
-        p = subprocess.Popen(fcm, stdout=subprocess.PIPE,encoding="utf-8",stderr=subprocess.STDOUT,env=ENV)
+        p = subprocess.Popen(fcm, stdout=subprocess.PIPE,encoding="utf-8",stderr=subprocess.STDOUT,env=ENV,startupinfo=startupinfo)
         for line in iter(p.stdout.readline, ""):
             output += line
             self.sig.emit(output)
@@ -81,6 +90,13 @@ class GM_Window(AcrylicWindow, Ui_Form):
             "    padding: 0px 10px;\n"
             "}\n"
             "")
+            with open("config.json","r") as temp_r:
+                temp_raw = temp_r.read()
+                temp_dict = json.loads(temp_raw)
+                
+            with open("config.json","w") as temp_w:
+                temp_dict["mode"] = a0
+                temp_w.write(json.dumps(temp_dict))
         else:
             setTheme(Theme.LIGHT)
             self.windowEffect.setMicaEffect(self.winId(),isDarkMode=False)
@@ -95,6 +111,13 @@ class GM_Window(AcrylicWindow, Ui_Form):
             "    padding: 0px 10px;\n"
             "}\n"
             "")
+            with open("config.json","r") as temp_r:
+                temp_raw = temp_r.read()
+                temp_dict = json.loads(temp_raw)
+                
+            with open("config.json","w") as temp_w:
+                temp_dict["mode"] = a0
+                temp_w.write(json.dumps(temp_dict))
     def showtips(self):
         pos = TeachingTipTailPosition.BOTTOM_RIGHT
         view = TeachingTipView(
@@ -145,8 +168,12 @@ class GM_Window(AcrylicWindow, Ui_Form):
                       fullscreen=fullscreen,disable_devtools=disable_dev_tools,disable_right_click=disable_right_click,always_on_top=always_on_top,
                       nativefier_command=nativefier_command
                     )
-
-                    os.startfile(cml.get_full_dir())
+                    cml_result = cml.get_full_dir()
+                    if(cml_result["status"]):
+                        os.startfile(cml_result["full_dir"])
+                    else:
+                        w = MessageBox("错误",f"自动打开文件夹失败\n错误代码:{cml_result['error_code']}",self)
+                        w.exec()
             else:
                 w = MessageBox("提醒","您未输入前缀，请自行到此程序文件夹下查看",self)
                 w.exec()
@@ -222,14 +249,11 @@ class GM_Window(AcrylicWindow, Ui_Form):
         doubleValidator.setNotation(QDoubleValidator.StandardNotation)
         # 设置精度，小数点2位
         doubleValidator.setDecimals(2)
-        self.setTitleBar(SplitTitleBar(self))
-        self.titleBar.raise_()
         self.ToolButton.setIcon(FluentIcon.SETTING)
         self.LineEdit.setValidator(doubleValidator)
         self.color_picker_button = ColorPickerButton(QColor("#ffffff"),"加载时背景颜色",self)
         self.horizontalLayout_4.addWidget(self.color_picker_button)
-        self.setWindowTitle('Nativefier GUI')
-        self.setWindowIcon(QIcon(":/image/image/icon.png"))
+
         self.resize(1000, 550)
         self.CheckBox.clicked.connect(self.set_always_on_top)
         self.CheckBox_2.clicked.connect(self.set_fullscreen)
@@ -249,13 +273,6 @@ class GM_Window(AcrylicWindow, Ui_Form):
         self.SwitchButton.checkedChanged['bool'].connect(self.switchmode)
         self.windowEffect.setMicaEffect(self.winId())
         self.IndeterminateProgressBar.setHidden(True)
-        self.titleBar.titleLabel.setStyleSheet("""
-            QLabel{
-                background: transparent;
-                font: 13px 'Segoe UI';
-                padding: 0 4px;
-            }
-        """)
         self.PlainTextEdit.setStyleSheet("PlainTextEdit {\n"
 "    color: green;\n"
 "    background-color: black;\n"
@@ -269,6 +286,47 @@ class GM_Window(AcrylicWindow, Ui_Form):
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()
         self.move(w//2 - self.width()//2, h//2 - self.height()//2)
+        if(MODE):
+            self.SwitchButton.setChecked(True)
+            setTheme(Theme.DARK)
+            self.windowEffect.setMicaEffect(self.winId(), isDarkMode=True)
+            ws.windowEffect.setMicaEffect(ws.winId(),isDarkMode=True)
+            self.PlainTextEdit.setStyleSheet("PlainTextEdit {\n"
+                "    color: green;\n"
+                "    background-color: black;\n"
+                "    border: 1px solid rgba(0, 0, 0, 13);\n"
+                "    border-bottom: 1px solid rgba(0, 0, 0, 100);\n"
+                "    border-radius: 5px;\n"
+                "    /* font: 14px \"Segoe UI\", \"Microsoft YaHei\"; */\n"
+                "    padding: 0px 10px;\n"
+                "}\n"
+            "")
+        else:
+            setTheme(Theme.LIGHT)
+            self.windowEffect.setMicaEffect(self.winId(),isDarkMode=False)
+            ws.windowEffect.setMicaEffect(ws.winId(),isDarkMode=False)
+            self.PlainTextEdit.setStyleSheet("PlainTextEdit {\n"
+                "    color: green;\n"
+                "    background-color: black;\n"
+                "    border: 1px solid rgba(0, 0, 0, 13);\n"
+                "    border-bottom: 1px solid rgba(0, 0, 0, 100);\n"
+                "    border-radius: 5px;\n"
+                "    /* font: 14px \"Segoe UI\", \"Microsoft YaHei\"; */\n"
+                "    padding: 0px 10px;\n"
+                "}\n"
+            "")
+        self.setTitleBar(SplitTitleBar(self))
+        self.titleBar.raise_()
+        self.titleBar.titleLabel.setStyleSheet("""
+            QLabel{
+                background: transparent;
+                font: 13px 'Segoe UI';
+                padding: 0 4px;
+            }
+        """)
+        self.setWindowTitle('Nativefier GUI')
+        self.setWindowIcon(QIcon(":/image/image/icon.png"))
+
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
@@ -291,16 +349,19 @@ if __name__ == '__main__':
 
     if not(os.path.exists("config.json")):
         with open('config.json', 'w') as f:
-            data = {"ELECTRON_MIRROR":"https://npmmirror.com/mirrors/electron/","NPM_MIRROR":"https://registry.npmmirror.com","version":1.0}
+            data = {"ELECTRON_MIRROR":"https://npmmirror.com/mirrors/electron/","NPM_MIRROR":"https://registry.npmmirror.com","version":1.0,"mode":False}
             f.write(json.dumps(data))
         from settings import SettingsWindow
     else:
-        with open("config.json") as f:
+        with open("config.json","r") as f:
             config_dict = json.loads(f.read())
             ENV["ELECTRON_MIRROR"] = config_dict["ELECTRON_MIRROR"]
             JSON_VERSION = config_dict["version"]
             NPM_MIRROR = config_dict["NPM_MIRROR"]
+            MODE = config_dict["mode"]
         from settings import SettingsWindow
+        
+    
     ws = SettingsWindow()
     try:
         w = GM_Window()

@@ -48,14 +48,17 @@ class CMCore():
         return cm_raw
         
     def get_full_dir(self):
-        response = requests.get(self.url)
-        response.encoding = response.apparent_encoding
-        if response.status_code == 200:
-            title = re.search(r'<title>(.*?)</title>', response.text).group(1)
-            arch = ""
-            if(platform.architecture()[0] == "64bit"):
-                arch = "x64"
-            elif(platform.architecture()[0] == "32bit"):
-                arch = "x86"
-        full_dir = f"{title}-{sys.platform}-{arch}"
-        return full_dir
+        try:
+            response = requests.get(self.url)
+            response.encoding = response.apparent_encoding
+            if response.status_code == 200:
+                title = re.search(r'<title>(.*?)</title>', response.text).group(1)
+                arch = ""
+                if(platform.architecture()[0] == "64bit"):
+                    arch = "x64"
+                elif(platform.architecture()[0] == "32bit"):
+                    arch = "x86"
+            full_dir = f"{title}-{sys.platform}-{arch}"
+            return {"status": True,"full_dir": full_dir}
+        except Exception as err:
+            return {"status": False, "error_code":err}

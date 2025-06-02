@@ -1,5 +1,5 @@
 [[source]]
-url = "https://mirrors.aliyun.com/pypi/simple/"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
 verify_ssl = true
 name = "pip_conf_index_global"
 
@@ -7,9 +7,10 @@ name = "pip_conf_index_global"
 pyqt5 = "*"
 pyqt5-frameless-window = "*"
 requests = "*"
-pyqt-fluent-widgets = {git = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets.git"}
+pyqt-fluent-widgets = "*"
+pyinstaller = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = "3.8.9"

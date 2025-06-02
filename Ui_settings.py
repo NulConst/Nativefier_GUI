@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\VMTask\Desktop\Nativefier_GUI\settings.ui'
+# Form implementation generated from reading ui file 'd:\PrivateFolders\Desktop\Nativefier_GUI\settings.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -45,7 +45,7 @@ class Ui_Form(object):
         self.PrimaryPushButton.setObjectName("PrimaryPushButton")
         self.verticalLayout.addWidget(self.PrimaryPushButton)
         self.HyperlinkButton = HyperlinkButton(Form)
-        self.HyperlinkButton.setUrl(QtCore.QUrl("https://github.com/VMTask/Nativefier_GUI"))
+        self.HyperlinkButton.setUrl(QtCore.QUrl("https://github.com/NulConst/Nativefier_GUI"))
         self.HyperlinkButton.setObjectName("HyperlinkButton")
         self.verticalLayout.addWidget(self.HyperlinkButton)
         self.HyperlinkButton_2 = HyperlinkButton(Form)
